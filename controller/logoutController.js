@@ -3,9 +3,8 @@ const pool = require('../config/db');
 const handleUserLogout = async (req, res) => {
     try {
         const cookies = req.cookies;
-        if (!cookies?.jwt) return res.sendStatus(204);
+        if (!cookies || !cookies.jwt) return res.sendStatus(204);
         const refreshToken = cookies.jwt;
-        console.log(refreshToken);
 
         const foundUserQuery = `SELECT * FROM user_refresh_tokens WHERE token = $1`;
         const foundUserResult = await pool.query(foundUserQuery, [refreshToken]);

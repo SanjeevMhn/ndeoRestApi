@@ -11,11 +11,19 @@ const cookieParser = require('cookie-parser');
 
 // import pool from './config/db';
 
-
+const allowedOrigins = ["http://localhost:4200"];
+const corsOptions = {
+    origin: function(origin,callback){
+        if(!origin || allowedOrigins.indexOf(origin) !== -1){
+            callback(null,true);
+        }else{
+            callback(new Error('Not Allowed by CORS'));
+        }
+    },
+    credentials: true,
+}
 // app.use(credentials);
-app.use(cors({
-    origin: ['http://localhost:4200', 'https://www.sanusnursery.com.np']
-}));
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());

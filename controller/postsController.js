@@ -17,6 +17,25 @@ const getAllPosts = async (req, res) => {
     }
 }
 
+const getPostById = async(req,res) => {
+    try{
+        const getPostByIdQuery = `SELECT 
+                                    posts.post_id,
+                                    TRIM(posts.post_title) as post_title, 
+                                    TRIM(posts.post_desc) as post_desc, 
+                                    users.user_name as post_author
+                                 FROM posts
+                                 LEFT JOIN users ON posts.user_id = users.user_id
+                                 WHERE posts.post_id = $1`;
+
+        const getPostByIdResult = await pool.query(getPostByIdQuery,[req.params.id]);
+        res.status(200).json({post: getPostByIdResult.rows});
+                                
+    }catch(error){
+        res.status(500).json({ error: "An error occured getting the required post" });
+    }
+}
+
 const createNewPosts = async (req, res) => {
     try {
         const authHeader = req.headers['authorization'];
@@ -44,6 +63,7 @@ const createNewPosts = async (req, res) => {
 
 module.exports = {
     getAllPosts,
-    createNewPosts
+    createNewPosts,
+    getPostById,
 }
 

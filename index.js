@@ -35,6 +35,7 @@ app.use('/api/logout',require('./routes/logoutRoute'));
 
 app.use(verifyJWT);
 app.use('/api/posts', require('./routes/postRoute'));
+app.use('/api/user', require('./routes/userRoute'));
 
 
 app.listen(port, () => {

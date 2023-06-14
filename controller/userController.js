@@ -14,7 +14,11 @@ const getUserData = async (req, res) => {
                 if (err) return res.sendStatus(403);
                 const getUserDataFromEmailQuery = `SELECT user_id,user_name,user_email FROM users WHERE user_email = $1`;
                 const getUserDataFromEmailResult = await pool.query(getUserDataFromEmailQuery,[decoded.user_email])
-                res.status(200).json({user: getUserDataFromEmailResult.rows})
+
+                const getUserPostsQuery = `SELECT posts.post_id,posts.post_title,posts.post_desc FROM posts WHERE posts.user_id = $1`;
+                const getUserPostsResult = await pool.query(getUserPostsQuery,[getUserDataFromEmailResult.rows[0].user_id]);
+
+                res.status(200).json({user: getUserDataFromEmailResult.rows, posts: getUserPostsResult.rows})
             }
         )
     }catch (error){
